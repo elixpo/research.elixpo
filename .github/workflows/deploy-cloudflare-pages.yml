@@ -110,7 +110,7 @@ jobs:
           done
 
           fetch --output /tmp/research-home.html "$CANDIDATE_URL/"
-          grep -q '<link rel="canonical" href="https://research.elixpo.com/"' /tmp/research-home.html
+          grep -q '<link rel="canonical" href="https://research.elixpo.com"' /tmp/research-home.html
           grep -q '<meta name="robots" content="index, follow"' /tmp/research-home.html
 
       - name: Attach production custom domain
