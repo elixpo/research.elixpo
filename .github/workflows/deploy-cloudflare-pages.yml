@@ -49,6 +49,9 @@ jobs:
       - name: Build static publication site
         run: npm run build
 
+      - name: Verify crawl and scholarly metadata
+        run: npm run site:check
+
       - name: Ensure Cloudflare Pages project exists
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

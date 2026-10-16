@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   creator: "Elixpo",
   publisher: "Elixpo",
   category: "research",
+  referrer: "strict-origin-when-cross-origin",
+  formatDetection: { email: false, address: false, telephone: false },
+  alternates: {
+    canonical: "/",
+    types: { "application/atom+xml": "/feed.xml" },
+  },
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "https://elixpo.com/logos/logo.webp", type: "image/webp" }],
     shortcut: ["/favicon.ico"],

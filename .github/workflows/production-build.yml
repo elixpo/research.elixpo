@@ -29,3 +29,5 @@ jobs:
         run: npm ci
       - name: Build static publication site
         run: npm run build
+      - name: Verify crawl and scholarly metadata
+        run: npm run site:check
