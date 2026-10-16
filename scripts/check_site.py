@@ -61,7 +61,7 @@ def check_site(site: Path) -> None:
         for node in sitemap.findall(f"{SITEMAP_NS}url/{SITEMAP_NS}loc")
         if node.text
     }
-    expected = {SITE_URL, *(f"{SITE_URL}/{record['slug']}" for record in records)}
+    expected = {f"{SITE_URL}/", *(f"{SITE_URL}/{record['slug']}" for record in records)}
     assert urls == expected, f"Unexpected sitemap URLs: {sorted(urls)}"
 
     for record in records:
