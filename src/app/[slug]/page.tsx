@@ -160,6 +160,24 @@ export default async function ResearchRecord({ params }: Props) {
         ← Research index
       </Link>
 
+      <section
+        className={`record-geometry record-geometry-${record.slug}`}
+        aria-hidden="true"
+      >
+        <div className="record-geometry-label">
+          <span>Elixpo / research record</span>
+          <b>
+            {String(RECORDS.findIndex((item) => item.slug === record.slug) + 1).padStart(2, "0")}
+          </b>
+        </div>
+        <i className="geometry-ring" />
+        <i className="geometry-disc" />
+        <i className="geometry-pill" />
+        <i className="geometry-tile" />
+        <i className="geometry-axis" />
+        <i className="geometry-node" />
+      </section>
+
       <header className="record-hero">
         <div className="record-heading">
           <p className="eyebrow">

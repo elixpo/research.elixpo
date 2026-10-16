@@ -121,7 +121,31 @@ h1,h2,h3,p { margin-top:0; }
 .standard article p { color:#b5c0b8; line-height:1.65; }
 
 .record-page { width:min(calc(100% - 3rem),1360px); margin:0 auto; padding:3rem 0 8rem; }
-.back { display:inline-block; margin:1rem 0 3rem; color:var(--green); font-size:.78rem; font-weight:700; }
+.back { display:inline-block; margin:1rem 0 2rem; color:var(--green); font-size:.78rem; font-weight:700; }
+.record-geometry { --geo-bg:#cbdcff; --geo-ink:#183f91; --geo-accent:#f2b51d; --geo-soft:rgba(255,255,255,.55); position:relative; height:clamp(190px,20vw,280px); overflow:hidden; isolation:isolate; border:1px solid rgba(20,32,24,.12); border-radius:1.5rem; background:var(--geo-bg); }
+.record-geometry::before { content:""; position:absolute; z-index:-1; inset:0; opacity:.32; background-image:radial-gradient(circle at center,rgba(20,32,24,.38) 1px,transparent 1.5px); background-size:22px 22px; mask-image:linear-gradient(90deg,#000,transparent 72%); }
+.record-geometry::after { content:""; position:absolute; z-index:-1; width:60%; height:160%; right:-14%; top:-50%; border-radius:50%; background:linear-gradient(145deg,var(--geo-soft),transparent 65%); transform:rotate(-15deg); }
+.record-geometry-label { position:absolute; z-index:4; inset:1.35rem 1.45rem auto; display:flex; justify-content:space-between; align-items:flex-start; color:var(--geo-ink); font:700 .62rem/1.4 ui-monospace,monospace; letter-spacing:.17em; text-transform:uppercase; }
+.record-geometry-label b { display:grid; place-items:center; width:2.5rem; height:2.5rem; border:1px solid currentColor; border-radius:50%; font-size:.68rem; }
+.record-geometry i { position:absolute; display:block; transition:transform .55s cubic-bezier(.2,.8,.2,1); }
+.geometry-ring { width:330px; height:330px; right:8%; top:-120px; border:1px solid color-mix(in srgb,var(--geo-ink) 62%,transparent); border-radius:50%; }
+.geometry-disc { width:138px; height:138px; right:23%; top:73px; border-radius:48% 52% 35% 65%; background:var(--geo-accent); transform:rotate(21deg); box-shadow:0 25px 60px rgba(20,32,24,.13); }
+.geometry-pill { width:78px; height:260px; left:34%; bottom:-145px; border:1px solid color-mix(in srgb,var(--geo-ink) 55%,transparent); border-radius:999px; background:var(--geo-soft); transform:rotate(47deg); }
+.geometry-tile { width:112px; height:112px; left:10%; bottom:-26px; border-radius:18% 82% 61% 39%; background:var(--geo-ink); transform:rotate(-13deg); }
+.geometry-axis { width:52%; height:1px; right:7%; bottom:46px; background:color-mix(in srgb,var(--geo-ink) 48%,transparent); transform:rotate(-8deg); transform-origin:right; }
+.geometry-node { width:18px; height:18px; right:43%; bottom:39px; border:4px solid var(--geo-bg); border-radius:50%; background:var(--geo-ink); box-shadow:0 0 0 1px var(--geo-ink); }
+.record-geometry:hover .geometry-disc { transform:rotate(31deg) translate(-8px,-5px); }
+.record-geometry:hover .geometry-tile { transform:rotate(-6deg) translate(7px,-6px); }
+.record-geometry-octabit { --geo-bg:#f1c655; --geo-ink:#193c79; --geo-accent:#f7f4e8; }
+.record-geometry-monodiffuse { --geo-bg:#cbd8ff; --geo-ink:#193a8c; --geo-accent:#ec5e46; }
+.record-geometry-oreolook { --geo-bg:#f0d7bd; --geo-ink:#6c2e1e; --geo-accent:#f26945; }
+.record-geometry-qfabric { --geo-bg:#cce9e5; --geo-ink:#075e57; --geo-accent:#f3b927; }
+.record-geometry-wozformer { --geo-bg:#e0d2f2; --geo-ink:#51287d; --geo-accent:#f1c93f; }
+.record-geometry-emoji-transnet { --geo-bg:#d8edd5; --geo-ink:#155a39; --geo-accent:#f08caa; }
+.record-geometry-falcon { --geo-bg:#d9dedb; --geo-ink:#24312a; --geo-accent:#e65d43; }
+.record-geometry-qfabric .geometry-disc,.record-geometry-falcon .geometry-disc { border-radius:50%; }
+.record-geometry-oreolook .geometry-tile,.record-geometry-wozformer .geometry-tile { border-radius:50%; }
+.record-geometry-emoji-transnet .geometry-pill,.record-geometry-monodiffuse .geometry-pill { transform:rotate(65deg); }
 .record-hero { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,360px); gap:clamp(2.5rem,6vw,6rem); align-items:end; padding:2.5rem 0 5rem; border-bottom:1px solid var(--line); }
 .record-heading { min-width:0; }
 .record-hero h1 { max-width:980px; margin:1rem 0 1.4rem; font-size:clamp(3.5rem,6.1vw,6.8rem); line-height:.93; letter-spacing:-.068em; text-wrap:balance; }
@@ -169,7 +193,7 @@ footer { display:flex; justify-content:space-between; gap:2rem; padding:3.5rem m
   .research-hero { min-height:760px; margin-top:-80px; padding:8.5rem 1rem 2.5rem; align-items:flex-start; }.research-hero-copy h1 { font-size:clamp(3.4rem,16vw,5rem); }.research-hero-copy > p:not(.eyebrow) { margin-top:1.5rem; font-size:.92rem; }.research-hero-note { left:1rem; right:auto; bottom:2rem; }.object { opacity:.25; }.object-code { top:45%; right:-10%; }.object-paper { right:10%; bottom:9%; }.object-model { display:none; }
   .section { padding:4.5rem 1rem; }.section > header h2 { font-size:clamp(2.7rem,13vw,4.2rem); }
   .feature { display:block; }.feature-art { height:230px; }.feature-copy { min-height:0; }.feature-copy > b { margin-top:2rem; }.researcher-grid article { display:block; }.researcher-mark { height:210px; }.researcher-copy { min-height:0; }.researcher-work { margin-top:2rem; }
-  .experiment-grid,.record-hero,.record-grid,.citation { grid-template-columns:1fr; }.record-hero,.record-grid,.citation { gap:2rem; }.record-page { width:calc(100% - 2rem); padding-top:2rem; }.back { margin-bottom:1.5rem; }.released-material { position:static; }.record-summary { width:100%; }.record-byline { align-items:flex-start; }
+  .experiment-grid,.record-hero,.record-grid,.citation { grid-template-columns:1fr; }.record-hero,.record-grid,.citation { gap:2rem; }.record-page { width:calc(100% - 2rem); padding-top:2rem; }.back { margin-bottom:1.5rem; }.record-geometry { height:180px; border-radius:1.1rem; }.geometry-ring { right:-100px; top:-145px; }.geometry-disc { width:100px; height:100px; right:18%; top:65px; }.geometry-pill { left:38%; }.geometry-tile { width:82px; height:82px; left:8%; bottom:-18px; }.released-material { position:static; }.record-summary { width:100%; }.record-byline { align-items:flex-start; }
   .standard > div { grid-template-columns:1fr 1fr; }.standard article:nth-child(2) { border-right:0; }.standard article { border-bottom:1px solid rgba(255,255,255,.2); }
   footer { flex-direction:column; } footer nav { flex-wrap:wrap; gap:1rem; }
 }
