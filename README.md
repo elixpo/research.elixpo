@@ -31,17 +31,22 @@ Use `npm run lint`, `npm run typecheck`, and `npm run build` before release. The
 production build is a static export in `out/` suitable for the
 `research.elixpo.com` deployment.
 
+The repository deployment helper follows the shared Elixpo interface:
+
+```bash
+./deploy.sh --pages build
+./deploy.sh --pages build deploy
+```
+
 ## Deployment
 
 Production is deployed from `main` to the `research-elixpo` Cloudflare Pages
 project by `.github/workflows/deploy-cloudflare-pages.yml`. The workflow consumes
-the organization-managed `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`
-Actions secrets; they are not duplicated at repository scope. Access is granted
-only to repositories that deploy an Elixpo surface, and the token is limited to
-Cloudflare Pages write access. Cloudflare Pages owns the `research.elixpo.com`
-custom-domain binding, while Cloudflare DNS provides the corresponding CNAME.
-Do not create the DNS record without first attaching the custom domain to the
-Pages project.
+repository-level `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` Actions
+secrets. The token is limited to Cloudflare Pages write access. Cloudflare Pages
+owns the `research.elixpo.com` custom-domain binding, while Cloudflare DNS
+provides the corresponding CNAME. Do not create the DNS record without first
+attaching the custom domain to the Pages project.
 
 ## Releases
 
