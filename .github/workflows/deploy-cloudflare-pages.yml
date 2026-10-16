@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Synchronize canonical research snapshot
+        run: npm run registry:sync
+
       - name: Verify canonical research snapshot
         run: npm run registry:check
 
