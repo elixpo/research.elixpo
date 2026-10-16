@@ -81,12 +81,20 @@
       "github": "https://github.com/nihal-gazi",
       "portfolio": null,
       "profileSource": "public-evidence-only",
-      "rolePeriod": { "start": null, "end": null, "status": "current", "precision": "not-publicly-established" },
+      "rolePeriod": {
+        "start": null,
+        "end": null,
+        "status": "current",
+        "precision": "not-publicly-established"
+      },
       "evidence": [
         "https://github.com/elixpo/monodiffuse/commit/109bda407938e8287ceca9d58d86d6f9d456f32f",
         "https://github.com/elixpo/wozformer/commit/ab80d5d90da2bc4e39598d35f6827e2dd077a8f1"
       ],
-      "relatedResearch": ["monodiffuse", "wozformer"]
+      "relatedResearch": [
+        "monodiffuse",
+        "wozformer"
+      ]
     }
   ],
   "majorContributors": {
