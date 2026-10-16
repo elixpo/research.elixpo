@@ -1,43 +1,143 @@
-name: Deploy to Cloudflare Pages
+name: Deploy Cloudflare Pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
-concurrency:
-  group: cloudflare-pages-production
-  cancel-in-progress: true
+    inputs:
+      promote_domain:
+        description: Attach research.elixpo.com after the candidate passes every smoke test
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
   deployments: write
 
+concurrency:
+  group: research-elixpo-cloudflare-pages
+  cancel-in-progress: true
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    name: Validate and deploy
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment:
-      name: production
-      url: https://research.elixpo.com
+      name: cloudflare-pages-candidate
+      url: https://research-elixpo.pages.dev
     steps:
       - name: Check out repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
       - name: Set up Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: 24
           cache: npm
+
       - name: Install dependencies
         run: npm ci
-      - name: Verify registry snapshot
+
+      - name: Verify canonical research snapshot
         run: npm run registry:check
+
       - name: Build static publication site
         run: npm run build
-      - name: Deploy production output
-        uses: cloudflare/wrangler-action@v4
+
+      - name: Ensure Cloudflare Pages project exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: research-elixpo
+        run: |
+          endpoint="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$CLOUDFLARE_PAGES_PROJECT"
+          status="$(curl --silent --show-error --output /tmp/cloudflare-project.json --write-out '%{http_code}' \
+            --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            --header 'Content-Type: application/json' \
+            "$endpoint")"
+
+          if [[ "$status" == 200 ]]; then
+            python3 -c 'import json; data=json.load(open("/tmp/cloudflare-project.json")); assert data.get("success"), data.get("errors")'
+          elif [[ "$status" == 404 ]]; then
+            curl --fail --silent --show-error \
+              --request POST \
+              --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              --header 'Content-Type: application/json' \
+              --data "{\"name\":\"$CLOUDFLARE_PAGES_PROJECT\",\"production_branch\":\"main\"}" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects" \
+              > /tmp/cloudflare-project-create.json
+            python3 -c 'import json; data=json.load(open("/tmp/cloudflare-project-create.json")); assert data.get("success"), data.get("errors")'
+          else
+            cat /tmp/cloudflare-project.json
+            exit 1
+          fi
+
+      - name: Deploy candidate to Cloudflare Pages
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy out --project-name=research-elixpo --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Smoke-test candidate publication
+        env:
+          CANDIDATE_URL: https://research-elixpo.pages.dev
+        run: |
+          fetch() {
+            curl --fail --silent --show-error --location \
+              --retry 12 --retry-all-errors --retry-delay 5 "$@"
+          }
+
+          for route in \
+            / \
+            /octabit/ \
+            /oreolook/ \
+            /monodiffuse/ \
+            /robots.txt \
+            /sitemap.xml \
+            /feed.xml
+          do
+            fetch --output /dev/null "$CANDIDATE_URL$route"
+          done
+
+          fetch --output /tmp/research-home.html "$CANDIDATE_URL/"
+          grep -q '<link rel="canonical" href="https://research.elixpo.com/"' /tmp/research-home.html
+          grep -q '<meta name="robots" content="index, follow"' /tmp/research-home.html
+
+      - name: Attach production custom domain
+        if: github.event_name == 'workflow_dispatch' && inputs.promote_domain
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          endpoint="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/research-elixpo/domains"
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            --header 'Content-Type: application/json' \
+            "$endpoint" > /tmp/cloudflare-domains.json
+
+          if python3 -c 'import json; data=json.load(open("/tmp/cloudflare-domains.json")); raise SystemExit(0 if any(item.get("name") == "research.elixpo.com" for item in data.get("result", [])) else 1)'
+          then
+            echo 'research.elixpo.com is already attached to the Pages project.'
+          else
+            curl --fail --silent --show-error \
+              --request POST \
+              --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              --header 'Content-Type: application/json' \
+              --data '{"name":"research.elixpo.com"}' \
+              "$endpoint" > /tmp/cloudflare-domain-create.json
+            python3 -c 'import json; data=json.load(open("/tmp/cloudflare-domain-create.json")); assert data.get("success"), data.get("errors")'
+          fi
+
+      - name: Verify production hostname after promotion
+        if: github.event_name == 'workflow_dispatch' && inputs.promote_domain
+        run: |
+          for route in / /octabit/ /oreolook/ /monodiffuse/ /robots.txt /sitemap.xml /feed.xml
+          do
+            curl --fail --silent --show-error --location \
+              --retry 30 --retry-all-errors --retry-delay 10 \
+              --output /dev/null "https://research.elixpo.com$route"
+          done
