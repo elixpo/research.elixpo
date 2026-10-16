@@ -3,5 +3,5 @@ node_modules/
 out/
 *.tsbuildinfo
 *.log
-.env*
+.env.local
 !.env.example

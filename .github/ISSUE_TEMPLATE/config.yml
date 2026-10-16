@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Research questions and discussion
+    url: https://github.com/orgs/elixpo/discussions
+    about: Discuss research ideas or ask questions that are not defect reports.
+  - name: Private security report
+    url: https://github.com/elixpo/research.elixpo/security/advisories/new
+    about: Report a vulnerability privately instead of opening a public issue.

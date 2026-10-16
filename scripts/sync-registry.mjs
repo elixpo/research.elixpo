@@ -14,21 +14,29 @@ async function fetchJson(url, headers = apiHeaders) {
 }
 
 const commit = await fetchJson(`https://api.github.com/repos/${repository}/commits/${branch}`);
-const sourceUrl = `https://raw.githubusercontent.com/${repository}/${commit.sha}/content/research.json`;
-const research = await fetchJson(sourceUrl, { "User-Agent": apiHeaders["User-Agent"] });
+const researchUrl = `https://raw.githubusercontent.com/${repository}/${commit.sha}/content/research.json`;
+const peopleUrl = `https://raw.githubusercontent.com/${repository}/${commit.sha}/content/people.json`;
+const [research, people] = await Promise.all([
+  fetchJson(researchUrl, { "User-Agent": apiHeaders["User-Agent"] }),
+  fetchJson(peopleUrl, { "User-Agent": apiHeaders["User-Agent"] }),
+]);
 
 if (research?.$schema !== "./schemas/research.schema.json" || !research.entries || typeof research.entries !== "object") {
   throw new Error("Canonical research registry does not satisfy the expected publication contract.");
 }
+if (people?.$schema !== "./schemas/people.schema.json" || !Array.isArray(people.currentTeam)) {
+  throw new Error("Canonical people registry does not satisfy the expected publication contract.");
+}
 
 const provenance = {
   sourceRepository: `https://github.com/${repository}`,
-  sourcePath: "content/research.json",
+  sourcePaths: ["content/research.json", "content/people.json"],
   sourceCommit: commit.sha,
   sourceCommittedAt: commit.commit.committer.date,
 };
 const outputs = new Map([
   ["content/research.json", `${JSON.stringify(research, null, 2)}\n`],
+  ["content/people.json", `${JSON.stringify(people, null, 2)}\n`],
   ["content/registry-source.json", `${JSON.stringify(provenance, null, 2)}\n`],
 ]);
 

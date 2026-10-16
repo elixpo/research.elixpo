@@ -1,0 +1,35 @@
+name: Site problem
+description: Report a broken page, accessibility problem, regression, or incorrect site behavior.
+title: "[Site]: "
+labels: ["BUGS"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Affected URL
+      placeholder: https://research.elixpo.com/
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Describe the observed result and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction details
+      description: Include viewport, browser, assistive technology, and reliable steps where relevant.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I checked that an open issue does not already cover this problem.
+          required: true
+        - label: This report does not contain a private security vulnerability.
+          required: true

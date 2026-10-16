@@ -1,0 +1,37 @@
+name: Research record correction
+description: Report inaccurate publication metadata, attribution, status, or artifact links.
+title: "[Research record]: "
+labels: ["SUPPORT"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for helping keep the public research record accurate. Please provide evidence that maintainers can verify.
+  - type: input
+    id: record
+    attributes:
+      label: Research record
+      description: Link to the affected research.elixpo.com page.
+      placeholder: https://research.elixpo.com/example
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What should change?
+      description: Identify the current statement and the precise correction.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public evidence
+      description: Link to the paper, repository history, release, dataset, or other authoritative record supporting the correction.
+    validations:
+      required: true
+  - type: checkboxes
+    id: conduct
+    attributes:
+      label: Participation
+      options:
+        - label: I will follow the Elixpo Code of Conduct and avoid sharing private or embargoed material.
+          required: true

@@ -4,6 +4,7 @@ export type ResearchRecord = (typeof registry.entries)[keyof typeof registry.ent
 export const LAST_VERIFIED = registry.lastVerified;
 export const RECORDS: ResearchRecord[] = Object.entries(registry.entries).map(([repository, record]) => ({ repository, ...record }));
 export const getResearch = (slug: string) => RECORDS.find((record) => record.slug === slug);
+export const LIVE_DEMOS = RECORDS.flatMap((record) => record.liveDemos.map((demo) => ({ ...demo, relatedSlug: record.slug, researchTitle: record.title })));
 
 export function scholarMetadata(record: ResearchRecord, canonical: string) {
   if (!record.paperUrl || !record.releasedAt || record.authors.length === 0) return {};

@@ -7,8 +7,9 @@ claiming peer review.
 
 ## Source of truth
 
-Research facts originate in `elixpo/elixpo/content/research.json`. This repository
-keeps a reviewed static snapshot under `content/` so builds remain deterministic.
+Research facts originate in `elixpo/elixpo/content/research.json`, while current
+team roles originate in `elixpo/elixpo/content/people.json`. This repository
+keeps reviewed static snapshots under `content/` so builds remain deterministic.
 The snapshot records the exact canonical source commit.
 
 ```bash
@@ -29,6 +30,18 @@ npm run dev
 Use `npm run lint`, `npm run typecheck`, and `npm run build` before release. The
 production build is a static export in `out/` suitable for the
 `research.elixpo.com` deployment.
+
+## Deployment
+
+Production is deployed from `main` to the `research-elixpo` Cloudflare Pages
+project by `.github/workflows/deploy-cloudflare-pages.yml`. The workflow consumes
+the organization-managed `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`
+Actions secrets; they are not duplicated at repository scope. Access is granted
+only to repositories that deploy an Elixpo surface, and the token is limited to
+Cloudflare Pages write access. Cloudflare Pages owns the `research.elixpo.com`
+custom-domain binding, while Cloudflare DNS provides the corresponding CNAME.
+Do not create the DNS record without first attaching the custom domain to the
+Pages project.
 
 ## Releases
 

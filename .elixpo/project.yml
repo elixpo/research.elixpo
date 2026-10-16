@@ -36,7 +36,7 @@ ci:
   build_cmd: "npm run build"
 
 operations:
-  deployment_workflow: null
+  deployment_workflow: .github/workflows/deploy-cloudflare-pages.yml
   test_workflow: .github/workflows/code-quality.yml
   build_workflow: .github/workflows/production-build.yml
   preview_workflow: null
