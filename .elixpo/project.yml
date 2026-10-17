@@ -1,4 +1,4 @@
-schema_version: "0.1"
+schema_version: "1.0"
 
 project:
   id: research-publication
@@ -7,6 +7,9 @@ project:
   description: "Static publication surface for Elixpo papers, experiments, code, artifacts, citations, and reproducibility records."
   family: service
   artifact_type: hosted-service
+  profile: research
+  technologies: [Next.js, TypeScript, JSON-LD, Cloudflare Pages]
+  chapter_status: null
   lifecycle: active
   relationship: core
   custody: elixpo-owned
@@ -16,12 +19,18 @@ project:
   deployment: https://research.elixpo.com
   discussions: https://github.com/orgs/elixpo/discussions
   status_owner: elixpo
-  status_verified_at: "2026-10-16"
+  status_verified_at: "2026-10-17"
 
 publication:
   public: true
   featured: true
   canonical_slug: research-publication
+  canonical_url: https://research.elixpo.com
+
+provenance:
+  classification_decision: https://github.com/elixpo/elixpo/blob/main/docs/governance/repository-classification-decisions.md
+  license_evidence: https://github.com/elixpo/elixpo/blob/main/content/repository-licenses.json
+  status_checked_at: "2026-10-17"
 
 license:
   current_file: LICENSE
@@ -42,6 +51,7 @@ operations:
   preview_workflow: null
   privileged_workflows_repo_specific: true
   fork_prs_receive_secrets: false
+  rollback: "Retain the prior Cloudflare Pages deployment and promote only after the candidate crawl and scholarly metadata checks pass."
 
 maintainers:
   - github: Circuit-Overtime
@@ -59,7 +69,7 @@ security:
   document: SECURITY.md
 
 conformance:
-  standard: "0.1"
-  status: migration-in-progress
-  assessed_at: "2026-10-16"
+  standard: "1.0"
+  status: conformant
+  assessed_at: "2026-10-17"
   exceptions: []
