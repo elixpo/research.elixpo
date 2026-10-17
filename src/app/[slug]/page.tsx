@@ -12,14 +12,22 @@ export function generateStaticParams() {
   return RECORDS.map((record) => ({ slug: record.slug }));
 }
 
+const conciseTitles: Record<string, string> = {
+  octabit: "OctaBit: RISC 8-bit breadboard computer",
+  monodiffuse: "MonoDiffuse: binary-weight diffusion training",
+  "search.elixpo": "OreoLook: low-latency LLM search caching",
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const record = getResearch((await params).slug);
   if (!record) return {};
 
   const path = `/${record.slug}`;
   const canonical = `https://research.elixpo.com${path}`;
+  const metadataTitle = conciseTitles[record.repository] ?? record.title;
+  const metadataDescription = `${metadataTitle} is an Elixpo ${record.researchStatus.replaceAll("-", " ")} record with authorship, source, artifacts, citation metadata, licensing, and reproducibility evidence.`;
   return {
-    ...pageMetadata(record.title, record.abstract, path),
+    ...pageMetadata(metadataTitle, metadataDescription, path),
     authors: record.authors.map((author) => ({ name: author.name })),
     keywords: [
       "Elixpo Research",
