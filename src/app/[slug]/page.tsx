@@ -17,7 +17,7 @@ const conciseTitles: Record<string, string> = {
   monodiffuse: "MonoDiffuse: binary-weight diffusion training",
   qfabric: "QFabric: timing-contract recovery across domains",
   "search.elixpo": "OreoLook: low-latency LLM search caching",
-  wozformer: "WozFormer: language models on constrained 6502 hardware",
+  wozformer: "WozFormer: language models for 6502 hardware",
 };
 
 const conciseDescriptions: Record<string, string> = {
