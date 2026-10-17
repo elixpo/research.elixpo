@@ -5,6 +5,7 @@ const check = process.argv.includes("--check");
 const root = process.cwd();
 const repository = "elixpo/elixpo";
 const branch = "main";
+const sourcePaths = ["content/research.json", "content/people.json"];
 const apiHeaders = { Accept: "application/vnd.github+json", "User-Agent": "Elixpo-Research-Registry-Sync/1.0" };
 
 async function fetchJson(url, headers = apiHeaders) {
@@ -13,7 +14,14 @@ async function fetchJson(url, headers = apiHeaders) {
   return response.json();
 }
 
-const commit = await fetchJson(`https://api.github.com/repos/${repository}/commits/${branch}`);
+const pathCommits = await Promise.all(sourcePaths.map(async (path) => {
+  const commits = await fetchJson(`https://api.github.com/repos/${repository}/commits?sha=${branch}&path=${encodeURIComponent(path)}&per_page=1`);
+  if (!Array.isArray(commits) || !commits[0]) throw new Error(`No canonical commit found for ${path}.`);
+  return commits[0];
+}));
+const commit = pathCommits.sort((left, right) =>
+  Date.parse(right.commit.committer.date) - Date.parse(left.commit.committer.date)
+)[0];
 const researchUrl = `https://raw.githubusercontent.com/${repository}/${commit.sha}/content/research.json`;
 const peopleUrl = `https://raw.githubusercontent.com/${repository}/${commit.sha}/content/people.json`;
 const [research, people] = await Promise.all([
@@ -30,7 +38,7 @@ if (people?.$schema !== "./schemas/people.schema.json" || !Array.isArray(people.
 
 const provenance = {
   sourceRepository: `https://github.com/${repository}`,
-  sourcePaths: ["content/research.json", "content/people.json"],
+  sourcePaths,
   sourceCommit: commit.sha,
   sourceCommittedAt: commit.commit.committer.date,
 };
