@@ -15,7 +15,16 @@ export function generateStaticParams() {
 const conciseTitles: Record<string, string> = {
   octabit: "OctaBit: RISC 8-bit breadboard computer",
   monodiffuse: "MonoDiffuse: binary-weight diffusion training",
+  qfabric: "QFabric: timing-contract recovery across domains",
   "search.elixpo": "OreoLook: low-latency LLM search caching",
+  wozformer: "WozFormer: language models on constrained 6502 hardware",
+};
+
+const conciseDescriptions: Record<string, string> = {
+  qfabric:
+    "QFabric is an Elixpo technical report on timing-contract recovery across Linux and RTOS domains, with source, licensing, and reproducibility evidence.",
+  wozformer:
+    "WozFormer is an active Elixpo experiment in language-model inference on constrained 6502 hardware, with source, licensing, and reproducibility evidence.",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,7 +34,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = `/${record.slug}`;
   const canonical = `https://research.elixpo.com${path}`;
   const metadataTitle = conciseTitles[record.repository] ?? record.title;
-  const metadataDescription = `${metadataTitle} is an Elixpo ${record.researchStatus.replaceAll("-", " ")} record with authorship, source, artifacts, citation metadata, licensing, and reproducibility evidence.`;
+  const metadataDescription = conciseDescriptions[record.repository]
+    ?? `${metadataTitle} is an Elixpo ${record.researchStatus.replaceAll("-", " ")} record with authorship, source, artifacts, citation metadata, licensing, and reproducibility evidence.`;
   return {
     ...pageMetadata(metadataTitle, metadataDescription, path),
     authors: record.authors.map((author) => ({ name: author.name })),
